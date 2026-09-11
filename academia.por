@@ -109,43 +109,43 @@ programa
 	}
 
 	funcao buscarAluno()
+{
+	cadeia nomeBusca
+	logico encontrado = falso
+
+	escreva("\n--- BUSCAR ALUNO ---\n")
+	escreva("Digite o nome ou parte do nome do aluno: ")
+	leia(nomeBusca)
+
+	para (inteiro i = 0; i < totalAlunos; i++)
 	{
-		cadeia nomeBusca
-		logico encontrado = falso
-
-		escreva("\n--- BUSCAR ALUNO ---\n")
-		escreva("Digite o nome exato do aluno: ")
-		leia(nomeBusca)
-
-		para (inteiro i = 0; i < totalAlunos; i++)
+		se (nomes[i] == nomeBusca)
 		{
-			se (nomes[i] == nomeBusca)
+			escreva("\n[ Aluno Encontrado ]")
+			escreva("\nID: ", i + 1)
+			escreva("\nNome: ", nomes[i])
+			escreva("\nIdade: ", idades[i])
+			escreva("\nPlano: ", planos[i])
+
+			se (pagamentosEmDia[i])
 			{
-				escreva("\n[ Aluno Encontrado ]")
-				escreva("\nID: ", i + 1)
-				escreva("\nNome: ", nomes[i])
-				escreva("\nIdade: ", idades[i])
-				escreva("\nPlano: ", planos[i])
-				
-				se (pagamentosEmDia[i])
-				{
-					escreva("\nStatus Financeiro: Adimplente\n")
-				}
-				senao
-				{
-					escreva("\nStatus Financeiro: PENDENTE\n")
-				}
-				
-				encontrado = verdadeiro
-				pare
+				escreva("\nStatus Financeiro: Adimplente\n")
 			}
-		}
+			senao
+			{
+				escreva("\nStatus Financeiro: PENDENTE\n")
+			}
 
-		se (nao encontrado)
-		{
-			escreva("\n-> Aluno não encontrado no sistema.\n")
+			encontrado = verdadeiro
 		}
 	}
+
+	se (nao encontrado)
+	{
+		escreva("\n-> Nenhum aluno encontrado.\n")
+	}
+}
+
 
 	funcao atualizarPagamento()
 	{
