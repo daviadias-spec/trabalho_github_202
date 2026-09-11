@@ -236,25 +236,31 @@ programa
 
 	// --- NOVA FUNÇÃO 2: Remover Aluno ---
 	funcao removerAluno()
+{
+	inteiro id
+	cadeia confirmacao
+
+	escreva("\n--- REMOVER ALUNO ---\n")
+
+	se (totalAlunos == 0)
 	{
-		inteiro id
+		escreva("Nenhum aluno cadastrado.\n")
+	}
+	senao
+	{
+		escreva("Digite o ID do aluno a ser removido (1 a ", totalAlunos, "): ")
+		leia(id)
 
-		escreva("\n--- REMOVER ALUNO ---\n")
+		inteiro indice = id - 1
 
-		se (totalAlunos == 0)
+		se (indice >= 0 e indice < totalAlunos)
 		{
-			escreva("Nenhum aluno cadastrado.\n")
-		}
-		senao
-		{
-			escreva("Digite o ID do aluno a ser removido (1 a ", totalAlunos, "): ")
-			leia(id)
+			escreva("\nAluno selecionado: ", nomes[indice], "\n")
+			escreva("Deseja realmente remover este aluno? (S/N): ")
+			leia(confirmacao)
 
-			inteiro indice = id - 1
-
-			se (indice >= 0 e indice < totalAlunos)
+			se (confirmacao == "S" ou confirmacao == "s")
 			{
-				// Desloca todos os elementos após o removido para a esquerda
 				para (inteiro i = indice; i < totalAlunos - 1; i++)
 				{
 					nomes[i] = nomes[i + 1]
@@ -268,8 +274,13 @@ programa
 			}
 			senao
 			{
-				escreva("\n-> ID de aluno inválido.\n")
+				escreva("\n-> Remoção cancelada.\n")
 			}
 		}
+		senao
+		{
+			escreva("\n-> ID de aluno inválido.\n")
+		}
 	}
+}
 }
