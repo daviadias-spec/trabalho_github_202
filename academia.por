@@ -20,6 +20,8 @@ programa
 			escreva("2. Listar Todos os Alunos\n")
 			escreva("3. Buscar Aluno por Nome\n")
 			escreva("4. Alterar Status de Pagamento\n")
+			escreva("5. Exibir Relatório e Estatísticas\n")
+			escreva("6. Remover Aluno\n")
 			escreva("0. Sair\n")
 			escreva("-------------------------------------\n")
 			escreva("Opção desejada: ")
@@ -38,6 +40,12 @@ programa
 					pare
 				caso 4:
 					atualizarPagamento()
+					pare
+				caso 5:
+					exibirEstatisticas()
+					pare
+				caso 6:
+					removerAluno()
 					pare
 				caso 0:
 					escreva("\nEncerrando o sistema... Até logo!\n")
@@ -183,6 +191,84 @@ programa
 			senao
 			{
 				escreva("\n-> ID do aluno é inválido.\n")
+			}
+		}
+	}
+
+	// --- NOVA FUNÇÃO 1: Relatório e Estatísticas ---
+	funcao exibirEstatisticas()
+	{
+		escreva("\n--- RELATÓRIO E ESTATÍSTICAS DA ACADEMIA ---\n")
+		
+		se (totalAlunos == 0)
+		{
+			escreva("Nenhum aluno cadastrado para gerar estatísticas.\n")
+		}
+		senao
+		{
+			inteiro adimplentes = 0
+			inteiro pendentes = 0
+			inteiro somaIdades = 0
+
+			para (inteiro i = 0; i < totalAlunos; i++)
+			{
+				somaIdades = somaIdades + idades[i]
+				
+				se (pagamentosEmDia[i])
+				{
+					adimplentes++
+				}
+				senao
+				{
+					pendentes++
+				}
+			}
+
+			real mediaIdade = somaIdades / totalAlunos
+			real percentualEmDia = (adimplentes * 100.0) / totalAlunos
+
+			escreva("Total de Alunos Cadastrados: ", totalAlunos, "\n")
+			escreva("Alunos em Dia (Adimplentes): ", adimplentes, " (", percentualEmDia, "%)\n")
+			escreva("Alunos Pendentes (Inadimplentes): ", pendentes, "\n")
+			escreva("Média de Idade dos Alunos: ", mediaIdade, " anos\n")
+		}
+	}
+
+	// --- NOVA FUNÇÃO 2: Remover Aluno ---
+	funcao removerAluno()
+	{
+		inteiro id
+
+		escreva("\n--- REMOVER ALUNO ---\n")
+
+		se (totalAlunos == 0)
+		{
+			escreva("Nenhum aluno cadastrado.\n")
+		}
+		senao
+		{
+			escreva("Digite o ID do aluno a ser removido (1 a ", totalAlunos, "): ")
+			leia(id)
+
+			inteiro indice = id - 1
+
+			se (indice >= 0 e indice < totalAlunos)
+			{
+				// Desloca todos os elementos após o removido para a esquerda
+				para (inteiro i = indice; i < totalAlunos - 1; i++)
+				{
+					nomes[i] = nomes[i + 1]
+					idades[i] = idades[i + 1]
+					planos[i] = planos[i + 1]
+					pagamentosEmDia[i] = pagamentosEmDia[i + 1]
+				}
+
+				totalAlunos--
+				escreva("\n-> Aluno removido com sucesso!\n")
+			}
+			senao
+			{
+				escreva("\n-> ID de aluno inválido.\n")
 			}
 		}
 	}
