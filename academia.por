@@ -1,145 +1,49 @@
 programa {
   inclua biblioteca Util --> u
   inclua biblioteca Texto --> txt
-  inclua biblioteca Tipos --> tp
 
   funcao inicio() {
-    cadeia opcaoDigitada, opcao, opcaoMenuSecundario
-    cadeia nomeCliente = ""
-    inteiro produtoEscolhido
-
-    cadeia produtos[6] = {
-      "iPhone 15 Pro", 
-      "Samsung Galaxy S24",
-      "MacBook Pro M3",
-      "PlayStation 5",
-      "iPad Air",
-      "Fone Bluetooth JBL"
-    }
-
-    real precos[6] = {
-      8000.00,
-      6000.00,
-      15000.00,
-      4000.00,
-      5500.00,
-      350.00
-    }
+    cadeia op, nome = "", produtos[] = {"iPhone 15 Pro", "Samsung Galaxy S24", "MacBook Pro M3", "PlayStation 5", "iPad Air", "Fone JBL"}
+    real precos[] = {8000.0, 6000.0, 15000.0, 4000.0, 5500.0, 350.0}
+    inteiro item
 
     faca {
-      escreva("--- TechStore - Eletrônicos ---\n")
-      escreva("C - Continuar\n")
-      escreva("S - Sair\n")
-      escreva("Sua opção: ")
-      leia(opcaoDigitada)
+      escreva("--- TechStore ---\nC - Continuar | S - Sair: ")
+      leia(op)
+      op = txt.caixa_alta(op)
 
-      opcao = txt.caixa_alta(opcaoDigitada)
+      se (op == "C") {
+        se (nome == "") {
+          escreva("Digite seu nome: ")
+          leia(nome)
+        }
 
-      escolha(opcao) {
-        caso "S": 
-          escreva("\nSaindo do sistema... Até logo!\n")
-          pare
+        escreva("\n1 - Ver Catálogo\n2 - Fazer Pedido\nOpção: ")
+        leia(op)
 
-        caso "C":
-          se (nomeCliente == "") {
-            nomeCliente = registrarCliente()
+        se (op == "1" ou op == "2") {
+          exibirProdutos(produtos, precos)
+
+          se (op == "2") {
+            escreva("0 - Voltar\n", nome, ", escolha o produto: ")
+            leia(item)
+
+            se (item > 0 e item <= u.numero_elementos(produtos)) {
+              escreva("\n=== NOTA FISCAL ===\nCliente: ", nome, "\nProduto: ", produtos[item - 1], "\nValor: R$ ", precos[item - 1], "\nCódigo: BR-", u.sorteia(10, 99), u.sorteia(100, 999), "\n===================\n\n")
+            } senao se (item != 0) {
+              escreva("\nOpção inválida!\n\n")
+            }
           }
-
-          escreva("\n--- MENU PRINCIPAL ---\n")
-          escreva("1 - Ver Catálogo\n")
-          escreva("2 - Fazer Pedido\n")
-          escreva("Sua opção: ")
-          leia(opcaoMenuSecundario)
-          escreva("\n")
-
-          escolha(opcaoMenuSecundario) {
-            caso "1": 
-              exibirProdutos(produtos, precos)
-              pare
-
-            caso "2": 
-              produtoEscolhido = realizarCompra(nomeCliente, produtos, precos)
-              se(produtoEscolhido != 0) {
-                imprimirNotaFiscal(nomeCliente, produtos, precos, produtoEscolhido)
-              }
-              pare
-
-            caso contrario:
-              escreva("Opção de menu inválida!\n\n")
-              pare
-          }
-          pare
-
-        caso contrario: 
-          escreva("\nOpção inválida! Digite novamente.\n\n")
+        }
       }
-    } enquanto(opcao != "S")
+    } enquanto (op != "S")
   }
 
-  funcao cadeia registrarCliente() {
-    cadeia nome
-    escreva("\nDigite seu nome para o cadastro: ")
-    leia(nome)
-    retorne nome
-  }
-
-  funcao exibirProdutos(cadeia produtos[], real precos[]) {
-    inteiro totalProdutos = u.numero_elementos(produtos)
-    escreva("\n--- CATÁLOGO DE PRODUTOS ---\n")
-    para(inteiro i = 0; i < totalProdutos; i++) {
-      escreva(i + 1, " - ", produtos[i], " - R$ ", precos[i], "\n")
+  funcao exibirProdutos(cadeia p[], real pr[]) {
+    escreva("\n--- CATÁLOGO ---\n")
+    para (inteiro i = 0; i < u.numero_elementos(p); i++) {
+      escreva(i + 1, " - ", p[i], " - R$ ", pr[i], "\n")
     }
     escreva("\n")
-  }
-
-  funcao inteiro realizarCompra(cadeia nome, cadeia produtos[], real precos[]) {
-    inteiro opcao
-    inteiro totalProdutos = u.numero_elementos(produtos)
-
-    exibirProdutos(produtos, precos)
-    escreva("0 - Voltar ao menu\n")
-
-    escreva("\n", nome, ", digite o número do produto desejado: ")
-    leia(opcao)
-
-    enquanto(opcao < 0 ou opcao > totalProdutos) {
-      escreva("\nOpção inválida! Escolha um item de 1 a ", totalProdutos, " ou digite 0 para cancelar: ")
-      leia(opcao)
-    }
-
-    se(opcao == 0) {
-      escreva("\nPedido cancelado.\n\n")
-      retorne 0
-    }
-
-    escreva("\nItem adicionado ao carrinho: ", produtos[opcao - 1], "!\n")
-    retorne opcao
-  }
-
-  funcao imprimirNotaFiscal(cadeia nome, cadeia produtos[], real precos[], inteiro itemEscolhido) {
-    escreva("\n=====================================\n")
-    escreva("            NOTA FISCAL              \n")
-    escreva("=====================================\n")
-    escreva("Cliente: ", nome, "\n")
-    escreva("Produto: ", produtos[itemEscolhido - 1], "\n")
-    escreva("Valor Total: R$ ", precos[itemEscolhido - 1], "\n")
-    escreva("Código do Pedido: ", gerarCodigoRastreio(), "\n")
-    escreva("=====================================\n\n")
-  }
-
-  funcao cadeia gerarCodigoRastreio() {
-    cadeia codigo
-    cadeia letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    inteiro pos1 = u.sorteia(0, 25)
-    inteiro pos2 = u.sorteia(0, 25)
-
-    inteiro numeros = u.sorteia(100, 999)
-    cadeia numerosCadeia = tp.inteiro_para_cadeia(numeros, 10)
-
-    codigo = txt.extrair_subtexto(letras, pos1, pos1 + 1)
-    codigo += txt.extrair_subtexto(letras, pos2, pos2 + 1)
-    codigo = "BR-" + codigo + numerosCadeia
-
-    retorne codigo
   }
 }
